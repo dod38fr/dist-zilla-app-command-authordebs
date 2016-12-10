@@ -1,4 +1,4 @@
-# dist-zilla-app-command-installauthordebs
+# dist-zilla-app-command-authordebs
 
 A Dist::Zilla command to list or install author dependencies with
 Debian perl packages.
@@ -18,7 +18,7 @@ The former command is preferred as only `apt-get` command is run as root.
 
 On Debian (soon) and derivatives:
 
- apt install libdist-zilla-app-command-installauthordebs-perl
+ apt install libdist-zilla-app-command-authordebs-perl
 
 
 
