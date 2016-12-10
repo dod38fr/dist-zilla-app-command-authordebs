@@ -67,22 +67,25 @@ EOF
 
 __END__
 
-=head1 NAME
+# ABSTRACT: List or install Dist::Zilla authors dependencies as Debian packages
 
-dpt-install-dzil-deps -- Install Dist::Zilla authors dependencies
 
 =head1 SYNOPSIS
 
-C<dpt install-dzil-deps>
+ dzil authordebs --install
+
+ apt install $( dzil authordebs )
 
 =head1 DESCRIPTION
 
-B<dpt install-dzil-deps> uses L<Dist::Zilla::Util::AuthorDeps> to scan
-the Perl module required to build a Perl module using L<Dist::Zilla> and install
-them as Debian package.
+B<dzil authordebs> uses L<Dist::Zilla::Util::AuthorDeps> to scan
+the Perl module required to build a Perl module using L<Dist::Zilla> and list the
+correspondong Debian packages.
 
-Note: the installation is done with C<sudo apt-get install>, so you
+With C<--install> option, the required packages are installed with C<sudo apt-get install>, so you
 must have sudo configured properly.
+
+This command exits 1 if some required dependencies are not available as Debian packages.
 
 =head1 COPYRIGHT & LICENSE
 
@@ -90,7 +93,7 @@ Copyright (C) 2016 Dominique Dumont <dod@debian.org>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 2 of the License, or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
