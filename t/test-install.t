@@ -20,13 +20,9 @@ my $path = Probe::Perl->find_perl_interpreter();
 
 my $perl_cmd = $path . ' -Ilib ' . join( ' ', map { "-I$_" } Probe::Perl->perl_inc() );
 
-subtest "modification without config file" => sub {
-    my $list_ok = Test::Command->new(
-        cmd => "$perl_cmd -S dzil authordebs"
-    );
-    exit_is_num( $list_ok, 0, 'dzil authordebs command went well' );
-
-};
-
+my $list_ok = Test::Command->new(
+    cmd => "$perl_cmd -S dzil authordebs"
+);
+exit_is_num( $list_ok, 0, 'dzil authordebs command went well' );
 
 done_testing;
