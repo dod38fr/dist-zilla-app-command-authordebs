@@ -80,7 +80,7 @@ __END__
 
 B<dzil authordebs> uses L<Dist::Zilla::Util::AuthorDeps> to scan
 the Perl module required to build a Perl module using L<Dist::Zilla> and list the
-correspondong Debian packages.
+corresponding Debian packages.
 
 With C<--install> option, the required packages are installed with C<sudo apt-get install>, so you
 must have sudo configured properly.
