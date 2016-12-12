@@ -10,8 +10,12 @@ use Test::Command 0.08;
 use Test::More;
 use Path::Tiny;
 
-if ( not path('/etc/debian_version') ) {
+if ( not path('/etc/debian_version')->exists ) {
     plan skip_all => "Cannot test on non Debian system";
+}
+
+if ( not path('/usr/bin/apt-file')->exists ) {
+    plan skip_all => "Cannot test without apt-file";
 }
 
 ## testing exit status
