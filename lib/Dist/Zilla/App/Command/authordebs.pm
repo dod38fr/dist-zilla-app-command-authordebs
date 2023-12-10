@@ -15,6 +15,7 @@ sub opt_spec {
     return (
         [ 'missing', 'list only the missing dependencies' ],
         [ 'install', 'also run sudo apt-get install for missing packages', {implies => "missing"} ],
+        [ 'verbose', 'show more information on dependency modules'],
     );
 }
 
@@ -23,7 +24,10 @@ sub execute {
 
     $self->app->chrome->logger->mute unless $self->app->global_options->verbose;
 
-    my $apt_contents = Debian::AptContents->new( { homedir => $ENV{'HOME'}.'/.dh-make-perl' } );
+    my $apt_contents = Debian::AptContents->new( {
+        cache_dir => $ENV{'HOME'}.'/.cache/dzil-authordebs',
+        verbose => $opt->{verbose} // 0,
+    } );
 
     unless ($apt_contents) {
         die <<EOF;
@@ -47,7 +51,7 @@ EOF
     foreach my $dep (@$dep_list) {
         my ($mod, $version) = %$dep;
         if ( my $pkg = $apt_contents->find_perl_module_package($mod) ) {
-            warn "$mod is in $pkg package\n";
+            warn "$mod is in $pkg package\n" if $opt->{verbose};
             push @pkgs , $pkg;
         }
         else {
@@ -84,10 +88,23 @@ B<dzil authordebs> uses L<Dist::Zilla::Util::AuthorDeps> to scan
 the Perl module required to build a Perl module using L<Dist::Zilla> and list the
 corresponding Debian packages.
 
-With C<--missing> option, only the missing modules are listed.
+=head1 OPTIONS
 
-With C<--install> option, the required packages are installed with C<sudo apt-get install>, so you
-must have sudo configured properly. This option implies C<--missing> option.
+=over
+
+=item --missing
+
+Only the missing modules are listed.
+
+=item --install
+
+Install required packages with C<sudo apt-get install>, so you must
+have sudo configured properly. This option implies C<--missing>
+option.
+
+=back
+
+=head1 EXIT CODE
 
 This command exits 1 if some required dependencies are not available as Debian packages.
 
