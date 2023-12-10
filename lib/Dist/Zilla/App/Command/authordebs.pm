@@ -14,7 +14,7 @@ sub abstract { "list or install authordeps using Debian packages" }
 sub opt_spec {
     return (
         [ 'missing', 'list only the missing dependencies' ],
-        [ 'install', 'also run sudo apt-get install for missing packages', {implies => "missing"} ],
+        [ 'install', 'also run sudo apt-get install for missing packages' ],
         [ 'verbose', 'show more information on dependency modules'],
     );
 }
@@ -39,7 +39,7 @@ and retry.
 EOF
     }
 
-    my $show_missing = $opt->{install} || $opt->{missing};
+    my $show_missing = $opt->{missing};
     my $dep_list = Dist::Zilla::Util::AuthorDeps::extract_author_deps('.',$show_missing);
 
     if (not @$dep_list ) {
@@ -98,8 +98,7 @@ Only the missing modules are listed.
 =item --install
 
 Install required packages with C<sudo apt-get install>, so you must
-have sudo configured properly. This option implies C<--missing>
-option.
+have sudo configured properly.
 
 =back
 
