@@ -6,6 +6,8 @@ package Dist::Zilla::App::Command::authordebs;
 use Debian::AptContents;
 use DhMakePerl::Utils qw(is_core_module);
 use Dist::Zilla::Util::AuthorDeps;
+use Config::Model::Dpkg;
+use Config::Model qw/cme/;
 
 use Dist::Zilla::App -command;
 
@@ -15,6 +17,7 @@ sub opt_spec {
     return (
         [ 'missing', 'list only the missing dependencies' ],
         [ 'install', 'also run sudo apt-get install for missing packages' ],
+        [ 'update-control|uc', 'Update debian/control file' ],
         [ 'verbose', 'show more information on dependency modules'],
     );
 }
@@ -59,11 +62,27 @@ EOF
         }
     }
 
+    if ($opt->{update_control}) {
+        warn "updating control file...";
+
+        # add Debian style dependencies
+        for my $p (qw/dh-dist-zilla dh-sequence-dist-zilla/) { $pkgs{$p} = 1;}
+
+        # remove package implied by dh-sequence-dist-zilla
+        delete $pkgs{'libdist-zilla-perl'};
+
+        # remove git plugin as it cannot be used in Debian build systems
+        delete $pkgs{'libdist-zilla-plugin-git-perl'};
+
+        my $pkgs = join( ",", sort keys %pkgs );
+        cme('dpkg-control')->modify("source Build-Depends:.ensure($pkgs)");
+    }
+
     if ($opt->{install} and %pkgs) {
         warn "Installing required packages...\n";
         system(qw/sudo apt-get install/, sort keys %pkgs);
     }
-    else {
+    elsif (not $opt->{update_control}) {
         say join("\n",sort keys %pkgs);
     }
 }
@@ -99,6 +118,11 @@ Only the missing modules are listed.
 
 Install required packages with C<sudo apt-get install>, so you must
 have sudo configured properly.
+
+=item --update-control or --uc
+
+Update the "Build-Depends" field of C<debian/control> file with the
+required packages.
 
 =back
 
