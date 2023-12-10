@@ -11,13 +11,14 @@ use Dist::Zilla::App -command;
 
 sub abstract { "list or install authordeps using Debian packages" }
 
-sub opt_spec
-{
-    [ 'install'   , 'also run sudo apt-get install for missing packages' ],
+sub opt_spec {
+    return (
+        [ 'missing', 'list only the missing dependencies' ],
+        [ 'install', 'also run sudo apt-get install for missing packages', {implies => "missing"} ],
+    );
 }
 
-sub execute
-{
+sub execute {
     my ($self, $opt) = @_; # $arg
 
     $self->app->chrome->logger->mute unless $self->app->global_options->verbose;
@@ -34,7 +35,8 @@ and retry.
 EOF
     }
 
-    my $dep_list = Dist::Zilla::Util::AuthorDeps::extract_author_deps('.',1);
+    my $show_missing = $opt->{install} || $opt->{missing};
+    my $dep_list = Dist::Zilla::Util::AuthorDeps::extract_author_deps('.',$show_missing);
 
     if (not @$dep_list ) {
         warn "All dzil dependencies are already available\n";
@@ -82,8 +84,10 @@ B<dzil authordebs> uses L<Dist::Zilla::Util::AuthorDeps> to scan
 the Perl module required to build a Perl module using L<Dist::Zilla> and list the
 corresponding Debian packages.
 
+With C<--missing> option, only the missing modules are listed.
+
 With C<--install> option, the required packages are installed with C<sudo apt-get install>, so you
-must have sudo configured properly.
+must have sudo configured properly. This option implies C<--missing> option.
 
 This command exits 1 if some required dependencies are not available as Debian packages.
 
