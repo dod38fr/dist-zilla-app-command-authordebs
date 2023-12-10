@@ -47,27 +47,26 @@ EOF
         exit;
     }
 
-    my @pkgs;
+    my %pkgs;
     foreach my $dep (@$dep_list) {
         my ($mod, $version) = %$dep;
         if ( my $pkg = $apt_contents->find_perl_module_package($mod) ) {
             warn "$mod is in $pkg package\n" if $opt->{verbose};
-            push @pkgs , $pkg;
+            $pkgs{$pkg} = 1;
         }
         else {
             warn "$mod is not found in any Debian package\n";
         }
     }
 
-    if ($opt->{install} and @pkgs) {
+    if ($opt->{install} and %pkgs) {
         warn "Installing required packages...\n";
-        system(qw/sudo apt-get install/,@pkgs);
+        system(qw/sudo apt-get install/, sort keys %pkgs);
     }
     else {
-        say join("\n",@pkgs);
+        say join("\n",sort keys %pkgs);
     }
 }
-
 
 1;
 
