@@ -1,5 +1,14 @@
 {{$NEXT}}
 
+0.005 2023-12-13
+
+  This is the last release done on CPAN. Development is moved to
+  Debian's gitlab:
+  https://salsa.debian.org/perl-team/modules/packages/libdist-zilla-app-command-authordebs-perl
+
+  Bug fix:
+    * remove --update-control which has Debian only dependencies
+
 0.004 2023-12-10
 
   New features:
