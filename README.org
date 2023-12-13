@@ -3,7 +3,24 @@
   :CUSTOM_ID: dist-zilla-app-command-authordebs
   :END:
 
-A [[http://dzil.org/][Dist::Zilla]] command to list or install author
+** Moved to Debian's gitlab
+
+With version 0.004, I've added a feature to edit =debian/control=
+file. This feature relies on =Config::Model::Dpkg= (aka
+[[https://salsa.debian.org/perl-team/modules/packages/libconfig-model-dpkg-perl][libconfig-model-dpkg-perl]]) which is only available in Debian.
+
+Which means that this module is no longer suitable for CPAN.
+
+For CPAN, I've reverted the Debian only change and released version 0.005.
+
+Any further development of this module will be done
+on [[https://salsa.debian.org/perl-team/modules/packages/libdist-zilla-app-command-authordebs-perl][Debian Perl Group / libdist-zilla-app-command-authordebs]].
+
+No new release will be done on CPAN.
+
+** What is dist-zilla-app-command-authordebs ?
+
+It's a [[http://dzil.org/][Dist::Zilla]] command to list or install author
 dependencies with Debian perl packages.
 
 This command is useful to work on the source of a Perl module that
